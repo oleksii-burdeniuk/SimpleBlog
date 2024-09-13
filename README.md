@@ -5,13 +5,13 @@
 1. Install dependencies
 
    ```bash
-   npm install
+   yarn install
    ```
 
 2. Start the app
 
    ```bash
-    npx expo start
+    yarn expo start
    ```
 
 In the output, you'll find options to open the app in a
