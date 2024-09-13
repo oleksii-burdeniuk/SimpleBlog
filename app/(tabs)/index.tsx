@@ -6,30 +6,41 @@ import { ErrorComponent } from "@/components/ErrorComponent";
 import { useTranslation } from "@/hooks/useTranslation";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import PostItem from "@/components/PostItem";
-import { useCallback } from "react";
+import { useCallback, useRef } from "react";
 import { PostItemInterface } from "@/types/posts";
 import { useUsers } from "@/hooks/useUsers";
-import { UserInterfaceIdiom } from "@/types/users";
+import { useComments } from "@/hooks/useComments";
+import { TouchableOpacity } from "react-native-gesture-handler";
 
 export default function PostScreen() {
   const { error, posts, isFetching, refetchPosts } = usePosts();
-  const {
-    error: errorUser,
-    users,
-    isFetching: isFetchingUsers,
-    refetchUsers,
-  } = useUsers();
+  const { users, refetchUsers } = useUsers();
+  const { comments, refetchComments } = useComments();
+  const flatListRef = useRef<FlatList>(null);
+
   const insets = useSafeAreaInsets();
   const { t } = useTranslation();
 
   const renderItem = useCallback(
-    ({ item }: { item: PostItemInterface; user: UserInterfaceIdiom }) => {
+    ({ item }: { item: PostItemInterface }) => {
       const userWritten = users.find((i) => i.id === item.userId);
-      if (!userWritten) return;
-      return <PostItem item={item} user={userWritten} />;
+      if (!userWritten) return <></>;
+      return (
+        <PostItem
+          key={item.id}
+          item={item}
+          user={userWritten}
+          comments={comments.filter((c) => c.postId == item.id)}
+        />
+      );
     },
-    [users],
+    [users, comments],
   );
+
+  const scrollToTop = () => {
+    if (flatListRef.current)
+      flatListRef.current.scrollToOffset({ offset: 0, animated: true });
+  };
 
   const renderListEmptyComponent = useCallback(
     () => (
@@ -39,6 +50,25 @@ export default function PostScreen() {
     ),
     [],
   );
+  const renderListFooterComponent = useCallback(
+    () =>
+      posts.length ? (
+        <></>
+      ) : (
+        <ThemedView style={styles.lastItemContainer}>
+          <ThemedText type={"title"}>{t("noMoreItems")}</ThemedText>
+          <TouchableOpacity onPress={scrollToTop}>
+            <ThemedText type={"link"}>{t("goToTop")}</ThemedText>
+          </TouchableOpacity>
+        </ThemedView>
+      ),
+    [posts],
+  );
+
+  const handleRefetch = useCallback(() => {
+    refetchPosts();
+    refetchUsers(), refetchComments();
+  }, []);
 
   return (
     <ThemedView style={styles.container}>
@@ -48,10 +78,13 @@ export default function PostScreen() {
         onClose={() => {}}
       />
       <FlatList
+        removeClippedSubviews={true}
+        ref={flatListRef}
         showsVerticalScrollIndicator={false}
-        maxToRenderPerBatch={10}
+        windowSize={10}
+        maxToRenderPerBatch={20}
         refreshControl={
-          <RefreshControl refreshing={isFetching} onRefresh={refetchPosts} />
+          <RefreshControl refreshing={isFetching} onRefresh={handleRefetch} />
         }
         data={posts}
         contentContainerStyle={styles.content}
@@ -62,6 +95,7 @@ export default function PostScreen() {
         }}
         renderItem={renderItem}
         ListEmptyComponent={renderListEmptyComponent}
+        ListFooterComponent={renderListFooterComponent}
       />
     </ThemedView>
   );
@@ -83,6 +117,12 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     padding: 20,
+  },
+  lastItemContainer: {
+    justifyContent: "center",
+    alignItems: "center",
+    padding: 20,
+    gap: 16,
   },
   content: {
     gap: 16,

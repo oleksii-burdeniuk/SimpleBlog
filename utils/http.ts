@@ -2,9 +2,9 @@ import {
   createPostInterface,
   PostItemInterface,
   updatePostInterface,
-} from '@/types/posts';
-import axios from 'axios';
-const BackendUrl = 'https://jsonplaceholder.typicode.com/';
+} from "@/types/posts";
+import axios from "axios";
+const BackendUrl = "https://jsonplaceholder.typicode.com/";
 
 // USERS
 export const getAllUsers = async () => {
@@ -48,7 +48,7 @@ export const createPosts = async ({
   try {
     const res = await axios.post(`${BackendUrl}posts`, bodyData, {
       headers: {
-        'Content-type': 'application/json; charset=UTF-8',
+        "Content-type": "application/json; charset=UTF-8",
       },
     });
     return { data: res.data };
@@ -72,7 +72,7 @@ export const updatePosts = async ({
   try {
     const res = await axios.put(`${BackendUrl}posts/${id}`, bodyData, {
       headers: {
-        'Content-type': 'application/json; charset=UTF-8',
+        "Content-type": "application/json; charset=UTF-8",
       },
     });
     return { data: res.data };
@@ -90,7 +90,7 @@ export const updatePostsField = async ({
   try {
     const res = await axios.patch(`${BackendUrl}posts/${args.id}`, bodyData, {
       headers: {
-        'Content-type': 'application/json; charset=UTF-8',
+        "Content-type": "application/json; charset=UTF-8",
       },
     });
     return { data: res.data };
@@ -111,6 +111,14 @@ export const deletePost = async (id: string | number) => {
 export const getPostsComments = async (id: string | number) => {
   try {
     const res = await axios.get(`${BackendUrl}posts/${id}/comments`);
+    return { data: res.data };
+  } catch (error) {
+    return { error };
+  }
+};
+export const getAllComments = async () => {
+  try {
+    const res = await axios.get(`${BackendUrl}/comments`);
     return { data: res.data };
   } catch (error) {
     return { error };

@@ -1,11 +1,11 @@
-import { PostItemInterface } from "@/types/posts";
-import { getAllPosts } from "@/utils/http";
+import { getAllComments } from "@/utils/http";
 import { useState, useCallback, useEffect, useRef } from "react";
 import { useTranslation } from "./useTranslation";
+import { CommentsInterface } from "@/types/comments";
 
-export function usePosts() {
+export function useComments() {
   const { t } = useTranslation();
-  const [posts, setAllPosts] = useState<PostItemInterface[]>([]);
+  const [comments, setAllComments] = useState<CommentsInterface[]>([]);
   const [isFetching, setIsFetching] = useState(false);
   const [error, setError] = useState("");
 
@@ -25,24 +25,24 @@ export function usePosts() {
   }, [error]);
 
   useEffect(() => {
-    refetchPosts();
+    refetchComments();
   }, []);
 
-  const refetchPosts = useCallback(async () => {
+  const refetchComments = useCallback(async () => {
     setIsFetching(true);
-    const data = await getAllPosts();
+    const data = await getAllComments();
     if (data?.data) {
-      setAllPosts(data.data);
+      setAllComments(data.data);
     } else {
-      setError(t("postsError"));
+      setError(t("commentsError"));
     }
     setIsFetching(false);
   }, []);
 
   return {
     error,
-    posts,
+    comments,
     isFetching,
-    refetchPosts,
+    refetchComments,
   };
 }
