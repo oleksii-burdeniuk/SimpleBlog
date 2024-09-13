@@ -12,7 +12,7 @@ export const CustomBackButton = memo(() => {
   const iconColor = useThemeColor({}, "iconSecondary");
   return (
     <TouchableOpacity onPress={() => router.back()} style={styles.container}>
-      <Ionicons name="chevron-back" color={iconColor} size={18} />
+      <Ionicons name="chevron-back" color={iconColor} size={22} />
       <ThemedText type="default">{t("goBack")}</ThemedText>
     </TouchableOpacity>
   );

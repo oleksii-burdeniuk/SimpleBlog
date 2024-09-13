@@ -12,4 +12,12 @@ module.exports = {
   userScreenTitle: "User Details",
   goBack: "Go back",
   goToTop: "Go to top",
+  location: "Location",
+  userName: "User name",
+  email: "Email",
+  phone: "Phone",
+  company: "Company",
+  settings: "Settings",
+  darkMode: "Use dark theme",
+  language: "Language",
 };

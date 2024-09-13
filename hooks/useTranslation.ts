@@ -1,11 +1,12 @@
-import { getLocales } from 'expo-localization';
-import { I18n } from 'i18n-js';
-import { useState, useMemo, useCallback } from 'react';
-import en from '../locales/en/en';
-import ua from '../locales/ua/ua';
-import es from '../locales/es/es';
+import { I18n } from "i18n-js";
+import { useMemo, useCallback } from "react";
+import en from "../locales/en/en";
+import ua from "../locales/ua/ua";
+import es from "../locales/es/es";
 
-import TranslationInterpolation from '../locales/TranslationInterpolation';
+import TranslationInterpolation from "../locales/TranslationInterpolation";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import useLanguageStore from "@/store/settingsStore";
 
 const translations = {
   en: en,
@@ -13,6 +14,7 @@ const translations = {
   es: es,
 };
 
+const LANGUAGE_STORAGE_KEY = "LANGUAGE_STORAGE_KEY";
 type TranslationKeys = keyof typeof en;
 
 type InterpolationForKey<K extends TranslationKeys> =
@@ -21,9 +23,7 @@ type InterpolationForKey<K extends TranslationKeys> =
     : Record<string, any>;
 
 export function useTranslation() {
-  const deviceLanguage = getLocales()[0]?.languageCode || 'en';
-
-  const [language, setLanguage] = useState(deviceLanguage);
+  const { language, setLanguage } = useLanguageStore();
 
   const i18n = useMemo(() => {
     const i18nInstance = new I18n(translations);
@@ -36,12 +36,13 @@ export function useTranslation() {
     <K extends TranslationKeys>(key: K, obj?: InterpolationForKey<K>) => {
       return i18n.t(key, obj);
     },
-    [language]
+    [language],
   );
 
-  const changeLanguage = (newLanguage: 'en' | 'ua' | 'sp') => {
+  const changeLanguage = (newLanguage: "en" | "ua" | "es") => {
     setLanguage(newLanguage);
     i18n.locale = newLanguage;
+    AsyncStorage.setItem(LANGUAGE_STORAGE_KEY, newLanguage);
   };
 
   return {

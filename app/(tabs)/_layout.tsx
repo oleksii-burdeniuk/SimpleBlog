@@ -1,41 +1,54 @@
-import { Tabs } from 'expo-router';
-import React from 'react';
+import { Tabs } from "expo-router";
+import React from "react";
 
-import { TabBarIcon } from '@/components/navigation/TabBarIcon';
-import { Colors } from '@/constants/Colors';
-import { useColorScheme } from '@/hooks/useColorScheme';
-import { useTranslation } from '@/hooks/useTranslation';
+import { TabBarIcon } from "@/components/navigation/TabBarIcon";
+import { Colors } from "@/constants/Colors";
+
+import { useTranslation } from "@/hooks/useTranslation";
+import useSettingsStore from "@/store/settingsStore";
 
 export default function TabLayout() {
-  const colorScheme = useColorScheme();
+  const { theme } = useSettingsStore();
   const { t } = useTranslation();
 
   return (
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
+        tabBarActiveTintColor: Colors[theme ?? "light"].tint,
         headerShown: false,
       }}
     >
       <Tabs.Screen
-        name='index'
+        name="index"
         options={{
-          title: t('posts'),
+          title: t("posts"),
           tabBarIcon: ({ color, focused }) => (
             <TabBarIcon
-              name={focused ? 'list' : 'list-outline'}
+              name={focused ? "list" : "list-outline"}
               color={color}
             />
           ),
         }}
       />
       <Tabs.Screen
-        name='explore'
+        name="explore"
         options={{
-          title: t('users'),
+          title: t("users"),
           tabBarIcon: ({ color, focused }) => (
             <TabBarIcon
-              name={focused ? 'person' : 'person-outline'}
+              name={focused ? "person" : "person-outline"}
+              color={color}
+            />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="settings"
+        options={{
+          title: t("settings"),
+          tabBarIcon: ({ color, focused }) => (
+            <TabBarIcon
+              name={focused ? "settings" : "settings-outline"}
               color={color}
             />
           ),

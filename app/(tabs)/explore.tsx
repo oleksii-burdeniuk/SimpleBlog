@@ -1,23 +1,32 @@
 import { StyleSheet, FlatList, RefreshControl } from "react-native";
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
-import { ErrorComponent } from "@/components/ErrorComponent";
 import { useTranslation } from "@/hooks/useTranslation";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useUsers } from "@/hooks/useUsers";
 import UserItem from "@/components/UserItem";
 import { useCallback } from "react";
 import { UserInterfaceIdiom } from "@/types/users";
+import { usePosts } from "@/hooks/usePosts";
 
 export default function UsersScreen() {
-  const { error, users, isFetching, refetchUsers } = useUsers();
+  const { users, isFetching, refetchUsers } = useUsers();
+  const { posts, refetchPosts } = usePosts();
 
   const insets = useSafeAreaInsets();
   const { t } = useTranslation();
 
-  const renderItem = useCallback(({ item }: { item: UserInterfaceIdiom }) => {
-    return <UserItem item={item} />;
-  }, []);
+  const renderItem = useCallback(
+    ({ item }: { item: UserInterfaceIdiom }) => {
+      return (
+        <UserItem
+          item={item}
+          posts={posts.filter((p) => p.userId == item.id)}
+        />
+      );
+    },
+    [posts],
+  );
 
   const renderListEmptyComponent = useCallback(
     () => (
@@ -27,23 +36,23 @@ export default function UsersScreen() {
     ),
     [],
   );
+  const handleRefetch = useCallback(() => {
+    refetchUsers();
+    refetchPosts();
+  }, []);
+
   return (
     <ThemedView style={styles.container}>
-      <ErrorComponent
-        errorMessage={error}
-        isActive={!!error}
-        onClose={() => {}}
-      />
       <FlatList
         showsVerticalScrollIndicator={false}
         refreshControl={
-          <RefreshControl refreshing={isFetching} onRefresh={refetchUsers} />
+          <RefreshControl refreshing={isFetching} onRefresh={handleRefetch} />
         }
         maxToRenderPerBatch={10}
         data={users}
-        contentContainerStyle={[styles.content, { marginTop: insets.top }]}
-        keyExtractor={(item, index) => item.id.toString() + index}
-        style={styles.listContainer}
+        contentContainerStyle={[styles.content]}
+        keyExtractor={(item) => item.id.toString()}
+        style={[styles.listContainer, { marginTop: insets.top }]}
         renderItem={renderItem}
         ListEmptyComponent={renderListEmptyComponent}
       />

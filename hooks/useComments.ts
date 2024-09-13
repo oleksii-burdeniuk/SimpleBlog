@@ -39,10 +39,25 @@ export function useComments() {
     setIsFetching(false);
   }, []);
 
+  const getPostCommentsById = useCallback(
+    (id: string | number) => {
+      return comments.filter((c) => c.postId === id);
+    },
+    [comments],
+  );
+  const getPostCommentsCountById = useCallback(
+    (id: string | number) => {
+      return comments.filter((c) => c.postId === id).length || "0";
+    },
+    [comments],
+  );
+
   return {
     error,
     comments,
     isFetching,
     refetchComments,
+    getPostCommentsById,
+    getPostCommentsCountById,
   };
 }

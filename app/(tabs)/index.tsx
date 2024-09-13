@@ -1,4 +1,4 @@
-import { StyleSheet, FlatList, RefreshControl } from "react-native";
+import { StyleSheet, FlatList, RefreshControl, View } from "react-native";
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
 import { usePosts } from "@/hooks/usePosts";
@@ -23,16 +23,7 @@ export default function PostScreen() {
 
   const renderItem = useCallback(
     ({ item }: { item: PostItemInterface }) => {
-      const userWritten = users.find((i) => i.id === item.userId);
-      if (!userWritten) return <></>;
-      return (
-        <PostItem
-          key={item.id}
-          item={item}
-          user={userWritten}
-          comments={comments.filter((c) => c.postId == item.id)}
-        />
-      );
+      return <PostItem key={item.id} item={item} />;
     },
     [users, comments],
   );
@@ -52,7 +43,7 @@ export default function PostScreen() {
   );
   const renderListFooterComponent = useCallback(
     () =>
-      posts.length ? (
+      !posts.length ? (
         <></>
       ) : (
         <ThemedView style={styles.lastItemContainer}>
@@ -67,7 +58,8 @@ export default function PostScreen() {
 
   const handleRefetch = useCallback(() => {
     refetchPosts();
-    refetchUsers(), refetchComments();
+    refetchUsers();
+    refetchComments();
   }, []);
 
   return (

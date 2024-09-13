@@ -3,34 +3,29 @@ import { ThemedView } from "@/components/ThemedView";
 import { PostItemInterface } from "@/types/posts";
 import { ThemedText } from "./ThemedText";
 import { useThemeColor } from "@/hooks/useThemeColor";
-import { memo, useCallback } from "react";
+import { memo, useCallback, useEffect } from "react";
 import { capitalizeFirstLetter } from "@/utils/functions";
-import { UserInterfaceIdiom } from "@/types/users";
-import { CommentsInterface } from "@/types/comments";
 import CommentsIcon from "./Icons/CommentsIcon";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { Ionicons } from "@expo/vector-icons";
 import ShareIcon from "./Icons/ShareIcon";
-import { useRouter } from "expo-router";
+import { router } from "expo-router";
+import { useUsers } from "@/hooks/useUsers";
+import { useComments } from "@/hooks/useComments";
 
-export default memo(function PostItem({
-  item,
-  user,
-  comments,
-}: {
-  item: PostItemInterface;
-  user: UserInterfaceIdiom;
-  comments: CommentsInterface[];
-}) {
+export default memo(function PostItem({ item }: { item: PostItemInterface }) {
   const borderColor = useThemeColor({}, "borderItem");
   const backgroundColor = useThemeColor({}, "backgroundSecondary");
   const iconColor = useThemeColor({}, "iconSecondary");
-  const router = useRouter();
+  const { getUserById } = useUsers();
+  const { getPostCommentsCountById } = useComments();
+  const user = getUserById(item.userId);
 
+  const commentsCount = getPostCommentsCountById(item.userId);
   const handleShare = useCallback(async () => {
     try {
       const result = await Share.share({
-        message: `Look what ${user.name} say on simpleBlog! \n${capitalizeFirstLetter(item.title)}. \n${capitalizeFirstLetter(item.body)}. \n
+        message: `Look what ${user?.name} say on simpleBlog! \n${capitalizeFirstLetter(item.title)}. \n${capitalizeFirstLetter(item.body)}. \n
         `,
       });
       if (result.action === Share.sharedAction) {
@@ -52,35 +47,34 @@ export default memo(function PostItem({
 
   const handlePressUser = useCallback(async () => {
     try {
-      router.push(`/user/${user.id}`);
+      router.push(`/user/${user?.id}`);
     } catch (error) {}
   }, []);
 
   return (
     <ThemedView style={[styles.container, { borderColor: borderColor }]}>
-      <View style={styles.nameContainer}>
-        <TouchableOpacity
-          style={styles.btn}
-          onPress={handlePressUser}
-          activeOpacity={0.5}
-        >
-          <Ionicons name="person-circle" size={32} color={iconColor} />
-          <ThemedText type={"subtitle"}>
-            {capitalizeFirstLetter(user.name)}
+      {user && (
+        <View style={styles.nameContainer}>
+          <TouchableOpacity
+            style={styles.btn}
+            onPress={handlePressUser}
+            activeOpacity={0.5}
+          >
+            <Ionicons name="person-circle" size={32} color={iconColor} />
+            <ThemedText type={"subtitle"}>
+              {capitalizeFirstLetter(user?.name)}
+            </ThemedText>
+          </TouchableOpacity>
+          <Ionicons name="location-sharp" size={18} color={iconColor} />
+          <ThemedText type={"small"}>
+            {capitalizeFirstLetter(user?.address?.city)}
           </ThemedText>
-        </TouchableOpacity>
-        <ThemedText type={"small"}>
-          {capitalizeFirstLetter(user.address.city)}
-        </ThemedText>
-      </View>
+        </View>
+      )}
       <TouchableOpacity
         activeOpacity={0.5}
         onPress={handlePressComments}
-        style={{
-          backgroundColor: backgroundColor,
-          padding: 16,
-          borderRadius: 8,
-        }}
+        style={[styles.info, { backgroundColor: backgroundColor }]}
       >
         <ThemedText type={"subtitle"}>
           {capitalizeFirstLetter(item.title)}
@@ -93,7 +87,7 @@ export default memo(function PostItem({
       <View style={styles.infoContainer}>
         <TouchableOpacity style={styles.btn} onPress={handlePressComments}>
           <CommentsIcon color={iconColor} />
-          <ThemedText>{comments?.length || "0"}</ThemedText>
+          <ThemedText>{commentsCount}</ThemedText>
         </TouchableOpacity>
         <TouchableOpacity style={styles.btn} onPress={handleShare}>
           <ShareIcon color={iconColor} />
@@ -126,5 +120,10 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     gap: 8,
     alignItems: "center",
+    marginRight: 16,
+  },
+  info: {
+    padding: 16,
+    borderRadius: 8,
   },
 });

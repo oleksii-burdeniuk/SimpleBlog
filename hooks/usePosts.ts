@@ -1,11 +1,11 @@
-import { PostItemInterface } from "@/types/posts";
 import { getAllPosts } from "@/utils/http";
 import { useState, useCallback, useEffect, useRef } from "react";
 import { useTranslation } from "./useTranslation";
+import usePostsStore from "@/store/postsStore";
 
 export function usePosts() {
   const { t } = useTranslation();
-  const [posts, setAllPosts] = useState<PostItemInterface[]>([]);
+  const { posts, setPosts } = usePostsStore();
   const [isFetching, setIsFetching] = useState(false);
   const [error, setError] = useState("");
 
@@ -25,14 +25,14 @@ export function usePosts() {
   }, [error]);
 
   useEffect(() => {
-    refetchPosts();
+    if (!posts.length) refetchPosts();
   }, []);
 
   const refetchPosts = useCallback(async () => {
     setIsFetching(true);
     const data = await getAllPosts();
     if (data?.data) {
-      setAllPosts(data.data);
+      setPosts(data.data);
     } else {
       setError(t("postsError"));
     }
