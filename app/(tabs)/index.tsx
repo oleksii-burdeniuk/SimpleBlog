@@ -10,7 +10,7 @@ import { useCallback, useRef } from "react";
 import { PostItemInterface } from "@/types/posts";
 import { useUsers } from "@/hooks/useUsers";
 import { useComments } from "@/hooks/useComments";
-import { TouchableOpacity } from "react-native-gesture-handler";
+import { ListFooterComponent } from "@/components/ListFooterComponent";
 
 export default function PostScreen() {
   const { error, posts, isFetching, refetchPosts } = usePosts();
@@ -43,16 +43,7 @@ export default function PostScreen() {
   );
   const renderListFooterComponent = useCallback(
     () =>
-      !posts.length ? (
-        <></>
-      ) : (
-        <ThemedView style={styles.lastItemContainer}>
-          <ThemedText type={"title"}>{t("noMoreItems")}</ThemedText>
-          <TouchableOpacity onPress={scrollToTop}>
-            <ThemedText type={"link"}>{t("goToTop")}</ThemedText>
-          </TouchableOpacity>
-        </ThemedView>
-      ),
+      !posts.length ? <></> : <ListFooterComponent onPress={scrollToTop} />,
     [posts],
   );
 
@@ -109,12 +100,6 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     padding: 20,
-  },
-  lastItemContainer: {
-    justifyContent: "center",
-    alignItems: "center",
-    padding: 20,
-    gap: 16,
   },
   content: {
     gap: 16,

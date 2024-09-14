@@ -10,7 +10,7 @@
     "splash": {
       "image": "./assets/images/Sebastien.png",
       "resizeMode": "contain",
-      "backgroundColor": "#222333"
+      "backgroundColor": "#0a7ea4"
     },
     "ios": {
       "supportsTablet": true
@@ -18,7 +18,7 @@
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/ic_launcher-66e4a576499b5/ios/iTunesArtwork@1x.png",
-        "backgroundColor": "#222333"
+        "backgroundColor": "#0a7ea4"
       }
     },
     "web": {

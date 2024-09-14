@@ -9,7 +9,7 @@ export const Colors = {
     tint: tintColorLight,
     icon: "#687076",
     iconSecondary: "#000000",
-
+    iconLink: "#0a7ea4",
     tabIconDefault: "#687076",
     tabIconSelected: tintColorLight,
     borderItem: "#0000001a",
@@ -21,6 +21,7 @@ export const Colors = {
     tint: tintColorDark,
     icon: "#9BA1A6",
     iconSecondary: "#f0f0f0",
+    iconLink: "#0a7ea4",
     tabIconDefault: "#9BA1A6",
     tabIconSelected: tintColorDark,
     borderItem: "#FFFFFF1a",

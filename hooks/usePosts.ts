@@ -40,7 +40,13 @@ export function usePosts() {
 
   const getPostById = useCallback(
     (id: string | number) => {
-      return posts.find((p) => p.id == id) || posts[0];
+      return posts.find((p) => p.id == id);
+    },
+    [posts],
+  );
+  const getUsersPostByUserId = useCallback(
+    (id: string | number) => {
+      return posts.filter((p) => p.userId == id);
     },
     [posts],
   );
@@ -51,5 +57,6 @@ export function usePosts() {
     isFetching,
     refetchPosts,
     getPostById,
+    getUsersPostByUserId,
   };
 }

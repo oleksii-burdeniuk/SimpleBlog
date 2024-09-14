@@ -1,7 +1,7 @@
 import { ScrollView, StyleSheet, TouchableOpacity, View } from "react-native";
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
-import { useTranslation } from "@/hooks/useTranslation";
+
 import { router, useLocalSearchParams } from "expo-router";
 import { usePosts } from "@/hooks/usePosts";
 import { useUsers } from "@/hooks/useUsers";
@@ -15,7 +15,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 export default function PostDetailsScreen() {
   const insets = useSafeAreaInsets();
-  const { postId } = useLocalSearchParams();
+  const { postId, isDisabled = false } = useLocalSearchParams();
   const { getPostById } = usePosts();
   const { getUserById } = useUsers();
   const { getPostCommentsById } = useComments();
@@ -24,8 +24,7 @@ export default function PostDetailsScreen() {
   const post = getPostById(typeof postId == "string" ? postId : postId[0]);
   const user = getUserById(post.userId);
   const comments = getPostCommentsById(post.id);
-
-  console.log(comments);
+  const isLinkDisabled = !!+isDisabled;
   const handlePressUser = useCallback(async () => {
     try {
       router.push(`/user/${user?.id}`);
@@ -42,12 +41,13 @@ export default function PostDetailsScreen() {
         {user && (
           <View style={styles.nameContainer}>
             <TouchableOpacity
+              disabled={!!isLinkDisabled}
               style={styles.btn}
               onPress={handlePressUser}
               activeOpacity={0.5}
             >
               <Ionicons name="person-circle" size={52} color={iconColor} />
-              <ThemedText type={"title"}>
+              <ThemedText type={!!isLinkDisabled ? "title" : "titleLink"}>
                 {capitalizeFirstLetter(user?.name)}
               </ThemedText>
             </TouchableOpacity>

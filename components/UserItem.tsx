@@ -12,31 +12,44 @@ import { router } from "expo-router";
 export default memo(function UserItem({
   item,
   posts,
+  disabled = false,
 }: {
   item: UserInterfaceIdiom;
   posts: PostItemInterface[];
+  disabled: boolean;
 }) {
   const { t } = useTranslation();
-  const iconColor = useThemeColor({}, "iconSecondary");
   const backgroundColor = useThemeColor({}, "backgroundSecondary");
   const borderColor = useThemeColor({}, "borderItem");
+  const iconColor = useThemeColor({}, "iconSecondary");
+  const iconLink = useThemeColor({}, "iconLink");
 
   const handlePressUser = useCallback(async () => {
     try {
-      router.push(`/user/${item.id}`);
+      router.push({
+        pathname: `/user/${item.id}`,
+        params: {
+          isLinkActive: null,
+        },
+      });
     } catch (error) {}
   }, []);
 
   return (
     <ThemedView style={[styles.container, { borderColor: borderColor }]}>
       <TouchableOpacity
+        disabled={disabled}
         style={styles.nameContainer}
         onPress={handlePressUser}
         activeOpacity={0.5}
       >
-        <Ionicons name="person-circle" size={42} color={iconColor} />
-        <ThemedText type={"title"}>
-          {capitalizeFirstLetter(item.name)}
+        <Ionicons
+          name="person-circle"
+          size={42}
+          color={disabled ? iconColor : iconLink}
+        />
+        <ThemedText type={disabled ? "title" : "titleLink"}>
+          {capitalizeFirstLetter(item?.name)}
         </ThemedText>
       </TouchableOpacity>
       <View
@@ -52,7 +65,7 @@ export default memo(function UserItem({
             <ThemedText type={"default"}>{t("location")}:</ThemedText>
             <Ionicons name="location-sharp" size={18} color={iconColor} />
             <ThemedText type={"small"}>
-              {capitalizeFirstLetter(item.address.city)}
+              {capitalizeFirstLetter(item?.address?.city)}
             </ThemedText>
           </View>
         )}
@@ -98,6 +111,9 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingVertical: 8,
     gap: 8,
+    maxWidth: 800,
+    alignSelf: "center",
+    width: "100%",
   },
   nameContainer: {
     flexDirection: "row",

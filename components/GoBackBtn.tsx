@@ -9,11 +9,12 @@ import { memo } from "react";
 export const CustomBackButton = memo(() => {
   const router = useRouter();
   const { t } = useTranslation();
-  const iconColor = useThemeColor({}, "iconSecondary");
+  const iconLink = useThemeColor({}, "iconLink");
+
   return (
     <TouchableOpacity onPress={() => router.back()} style={styles.container}>
-      <Ionicons name="chevron-back" color={iconColor} size={22} />
-      <ThemedText type="default">{t("goBack")}</ThemedText>
+      <Ionicons name="chevron-back" color={iconLink} size={22} />
+      <ThemedText type="subtitleLink">{t("goBack")}</ThemedText>
     </TouchableOpacity>
   );
 });

@@ -14,10 +14,17 @@ import { useUsers } from "@/hooks/useUsers";
 import { useComments } from "@/hooks/useComments";
 import { useTranslation } from "@/hooks/useTranslation";
 
-export default memo(function PostItem({ item }: { item: PostItemInterface }) {
+export default memo(function PostItem({
+  item,
+  disabled = false,
+}: {
+  item: PostItemInterface;
+  disabled?: boolean;
+}) {
   const borderColor = useThemeColor({}, "borderItem");
   const backgroundColor = useThemeColor({}, "backgroundSecondary");
   const iconColor = useThemeColor({}, "iconSecondary");
+  const iconLink = useThemeColor({}, "iconLink");
   const { t } = useTranslation();
   const { getUserById } = useUsers();
   const { getPostCommentsCountById } = useComments();
@@ -27,7 +34,7 @@ export default memo(function PostItem({ item }: { item: PostItemInterface }) {
   const handleShare = useCallback(async () => {
     try {
       const result = await Share.share({
-        message: `${t("shareText", { name: user?.name })} \n${capitalizeFirstLetter(item.title)}. \n${capitalizeFirstLetter(item.body)}. \n
+        message: `${t("shareText", { name: user?.name || "User" })} \n${capitalizeFirstLetter(item.title)}. \n${capitalizeFirstLetter(item.body)}. \n
         `,
       });
       if (result.action === Share.sharedAction) {
@@ -43,7 +50,12 @@ export default memo(function PostItem({ item }: { item: PostItemInterface }) {
 
   const handlePressComments = useCallback(async () => {
     try {
-      router.push(`/post/${item.id}`);
+      router.push({
+        pathname: `/post/${item.id}`,
+        params: {
+          isDisabled: disabled ? 1 : 0,
+        },
+      });
     } catch (error) {}
   }, []);
 
@@ -58,12 +70,17 @@ export default memo(function PostItem({ item }: { item: PostItemInterface }) {
       {user && (
         <View style={styles.nameContainer}>
           <TouchableOpacity
+            disabled={disabled}
             style={styles.btn}
             onPress={handlePressUser}
             activeOpacity={0.5}
           >
-            <Ionicons name="person-circle" size={32} color={iconColor} />
-            <ThemedText type={"subtitle"}>
+            <Ionicons
+              name="person-circle"
+              size={32}
+              color={disabled ? iconColor : iconLink}
+            />
+            <ThemedText type={disabled ? "subtitle" : "subtitleLink"}>
               {capitalizeFirstLetter(user?.name)}
             </ThemedText>
           </TouchableOpacity>
@@ -88,11 +105,11 @@ export default memo(function PostItem({ item }: { item: PostItemInterface }) {
 
       <View style={styles.infoContainer}>
         <TouchableOpacity style={styles.btn} onPress={handlePressComments}>
-          <CommentsIcon color={iconColor} />
-          <ThemedText>{commentsCount}</ThemedText>
+          <CommentsIcon color={iconLink} />
+          <ThemedText style={{ color: iconLink }}>{commentsCount}</ThemedText>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.btn} onPress={handleShare}>
-          <ShareIcon color={iconColor} />
+        <TouchableOpacity style={[styles.btn]} onPress={handleShare}>
+          <ShareIcon color={iconLink} />
         </TouchableOpacity>
       </View>
     </ThemedView>

@@ -67,12 +67,10 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     height: "100%",
     width: "100%",
-    borderTopLeftRadius: 26,
-    borderTopRightRadius: 26,
   },
   listContainer: {
     flex: 1,
-    width: "100%",
+    minWidth: "100%",
   },
   emptyContainer: {
     flex: 1,
@@ -83,6 +81,5 @@ const styles = StyleSheet.create({
   },
   content: {
     gap: 16,
-    width: "100%",
   },
 });

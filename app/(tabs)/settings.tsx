@@ -64,14 +64,18 @@ export default function SettingsScreen() {
         onPress={handleLanguageChange}
         style={[styles.settingItem, { borderColor }]}
       >
-        <ThemedText style={styles.settingText}>{t("language")}</ThemedText>
-        <ThemedText style={styles.settingText}>
+        <ThemedText type="subtitleLink" style={styles.settingText}>
+          {t("language")}
+        </ThemedText>
+        <ThemedText type="subtitleLink" style={styles.settingText}>
           {capitalizeFirstLetter(language)}
         </ThemedText>
       </TouchableOpacity>
 
       <View style={[styles.settingItem, { borderColor }]}>
-        <ThemedText style={styles.settingText}>{t("darkMode")}</ThemedText>
+        <ThemedText type="subtitle" style={styles.settingText}>
+          {t("darkMode")}
+        </ThemedText>
         <Switch value={isDarkTheme} onValueChange={toggleTheme} />
       </View>
     </ThemedView>
