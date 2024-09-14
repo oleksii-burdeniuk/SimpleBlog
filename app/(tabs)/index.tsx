@@ -23,7 +23,7 @@ export default function PostScreen() {
 
   const renderItem = useCallback(
     ({ item }: { item: PostItemInterface }) => {
-      return <PostItem key={item.id} item={item} />;
+      return <PostItem item={item} />;
     },
     [users, comments],
   );

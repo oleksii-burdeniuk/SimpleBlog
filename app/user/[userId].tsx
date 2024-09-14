@@ -26,7 +26,7 @@ export default function UserDetailsScreen() {
 
   const renderItem = useCallback(
     ({ item }: { item: PostItemInterface }) => {
-      return <PostItem key={item.id} item={item} disabled={true} />;
+      return <PostItem item={item} disabled={true} />;
     },
     [user, comments],
   );

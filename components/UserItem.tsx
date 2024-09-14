@@ -16,7 +16,7 @@ export default memo(function UserItem({
 }: {
   item: UserInterfaceIdiom;
   posts: PostItemInterface[];
-  disabled: boolean;
+  disabled?: boolean;
 }) {
   const { t } = useTranslation();
   const backgroundColor = useThemeColor({}, "backgroundSecondary");
