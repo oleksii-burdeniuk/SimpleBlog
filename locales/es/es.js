@@ -20,4 +20,5 @@ module.exports = {
   settings: "Configuraciones",
   darkMode: "Usar tema oscuro",
   language: "Idioma",
+  shareText: "¡Mira lo que dice {{name}} en simpleBlog!",
 };

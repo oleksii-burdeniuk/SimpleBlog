@@ -12,11 +12,13 @@ import ShareIcon from "./Icons/ShareIcon";
 import { router } from "expo-router";
 import { useUsers } from "@/hooks/useUsers";
 import { useComments } from "@/hooks/useComments";
+import { useTranslation } from "@/hooks/useTranslation";
 
 export default memo(function PostItem({ item }: { item: PostItemInterface }) {
   const borderColor = useThemeColor({}, "borderItem");
   const backgroundColor = useThemeColor({}, "backgroundSecondary");
   const iconColor = useThemeColor({}, "iconSecondary");
+  const { t } = useTranslation();
   const { getUserById } = useUsers();
   const { getPostCommentsCountById } = useComments();
   const user = getUserById(item.userId);
@@ -25,7 +27,7 @@ export default memo(function PostItem({ item }: { item: PostItemInterface }) {
   const handleShare = useCallback(async () => {
     try {
       const result = await Share.share({
-        message: `Look what ${user?.name} say on simpleBlog! \n${capitalizeFirstLetter(item.title)}. \n${capitalizeFirstLetter(item.body)}. \n
+        message: `${t("shareText", { name: user?.name })} \n${capitalizeFirstLetter(item.title)}. \n${capitalizeFirstLetter(item.body)}. \n
         `,
       });
       if (result.action === Share.sharedAction) {
@@ -37,7 +39,7 @@ export default memo(function PostItem({ item }: { item: PostItemInterface }) {
         console.log("Share dismissed");
       }
     } catch (error) {}
-  }, []);
+  }, [user]);
 
   const handlePressComments = useCallback(async () => {
     try {

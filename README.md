@@ -14,6 +14,12 @@
     yarn expo start
    ```
 
+3. (if added new translations with data) Run auto creation interface for translations
+
+   ```bash
+    generate-locales-interface
+   ```
+
 In the output, you'll find options to open the app in a
 
 - [development build](https://docs.expo.dev/develop/development-builds/introduction/)

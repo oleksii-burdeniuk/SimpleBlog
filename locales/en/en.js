@@ -20,4 +20,7 @@ module.exports = {
   settings: "Settings",
   darkMode: "Use dark theme",
   language: "Language",
+  shareText: "Look what {{name}} say on simpleBlog!",
+  testGenerateInterface:
+    "this is {{test}} to generate {{interface}} by generate-locales-interface {{command}}",
 };
