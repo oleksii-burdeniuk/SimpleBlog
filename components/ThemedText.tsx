@@ -64,6 +64,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: "bold",
     fontFamily: "RobotoBold",
+    letterSpacing: 0.8,
   },
   link: {
     lineHeight: 22,

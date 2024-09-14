@@ -3,7 +3,7 @@ import { ThemedView } from "@/components/ThemedView";
 import { PostItemInterface } from "@/types/posts";
 import { ThemedText } from "./ThemedText";
 import { useThemeColor } from "@/hooks/useThemeColor";
-import { memo, useCallback, useEffect } from "react";
+import { memo, useCallback } from "react";
 import { capitalizeFirstLetter } from "@/utils/functions";
 import CommentsIcon from "./Icons/CommentsIcon";
 import { TouchableOpacity } from "react-native-gesture-handler";

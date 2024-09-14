@@ -17,7 +17,6 @@ export function useComments() {
       timeoutRef.current = +setTimeout(() => {
         setError("");
       }, 3000);
-      console.log("i", timeoutRef.current);
     }
     return () => {
       if (timeoutRef.current) clearInterval(timeoutRef.current);

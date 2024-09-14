@@ -17,7 +17,6 @@ export function usePosts() {
       timeoutRef.current = +setTimeout(() => {
         setError("");
       }, 3000);
-      console.log("i", timeoutRef.current);
     }
     return () => {
       if (timeoutRef.current) clearInterval(timeoutRef.current);
@@ -39,10 +38,18 @@ export function usePosts() {
     setIsFetching(false);
   }, []);
 
+  const getPostById = useCallback(
+    (id: string | number) => {
+      return posts.find((p) => p.id == id) || posts[0];
+    },
+    [posts],
+  );
+
   return {
     error,
     posts,
     isFetching,
     refetchPosts,
+    getPostById,
   };
 }
